@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>SN Silverplate Services · Pilotage et performance</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="assets/style.css?v=20261117a">
+</head>
+<body>
+<div class="note"><div class="wrap"><i class="ic" data-ic="info"></i><span>Montants, audiences et statuts d'exemple, pour montrer le fonctionnement du tableau. Les noms d'événements publiés par l'agence sont réels ; leurs chiffres ne le sont pas.</span></div></div>
+<header class="masthead"><div class="wrap mh">
+  <div class="brand"><img class="logo" src="assets/logo.png" alt="SN Silverplate Services"><div><p class="bn">SN Silverplate Services</p><p class="bs">Meilleure agence événementielle · ASCOM 2026</p></div></div>
+  <div class="mh-right"><p class="eyebrow">Pilotage et performance</p><p class="arrete"><i class="ic" data-ic="calendar"></i><span id="arrete"></span></p></div>
+</div></header>
+
+<nav class="filters" aria-label="Filtres"><div class="wrap fl">
+  <label>Période<select id="f-per">
+    <option value="12">12 derniers mois</option><option value="6">6 derniers mois</option><option value="3">3 derniers mois</option><option value="ytd">Depuis janvier 2026</option>
+  </select></label>
+  <label>Type d'événement<select id="f-type"><option value="all">Tous les types</option></select></label>
+  <label>Client<select id="f-cli"><option value="all">Tous les clients</option></select></label>
+  <button class="raz" id="raz" type="button"><i class="ic" data-ic="rotate-ccw"></i>Réinitialiser</button>
+</div>
+<div class="wrap tabs" role="tablist">
+  <a href="#s-ca" class="on"><i class="ic" data-ic="banknote"></i>Activité</a><a href="#s-dev"><i class="ic" data-ic="file-text"></i>Devis</a><a href="#s-enc"><i class="ic" data-ic="wallet"></i>Encaissements</a><a href="#s-aud"><i class="ic" data-ic="users"></i>Audience</a><a href="#s-nova"><i class="ic" data-ic="rocket"></i>NOVA X</a>
+</div></nav>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>L'agence en un coup d'œil</h1>
+    <p class="lede" id="phrase"></p>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+  <section class="alerts" id="alerts"></section>
+
+  <section class="block" id="s-ca">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="banknote"></i></span><h2>Chiffre d'affaires et marge</h2><p class="hint">Hors taxes, marge brute après coûts des prestataires</p></div>
+    <div class="grid2">
+      <div class="chart-box"><p class="cap">Par mois, chiffre d'affaires et taux de marge</p><div class="ch"><canvas id="c-mois"></canvas></div></div>
+      <div class="chart-box"><p class="cap">Par type d'événement</p><div class="types" id="types"></div></div>
+    </div>
+    <p class="sub"><i class="ic" data-ic="building-2"></i>Par client</p>
+    <div class="clients" id="clients"></div>
+    <p class="sub"><i class="ic" data-ic="calendar-days"></i>Par événement <span class="mute" id="nev"></span></p>
+    <div class="tbl-wrap"><table class="tbl" id="t-ev"></table></div>
+  </section>
+
+  <section class="block" id="s-dev">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="file-text"></i></span><h2>Devis en cours et taux de transformation</h2><p class="hint">Un devis tranché est gagné ou perdu</p></div>
+    <div class="minis" id="dev-minis"></div>
+    <div class="grid2 r mt">
+      <div class="chart-box"><p class="cap">Taux de transformation par type (devis gagnés sur devis tranchés)</p><div id="transfo"></div></div>
+      <div class="chart-box"><p class="cap">Devis en attente de réponse</p><div class="tbl-wrap"><table class="tbl" id="t-dev"></table></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="s-enc">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="wallet"></i></span><h2>Encaissements</h2><p class="hint">Montants toutes taxes comprises</p></div>
+    <div class="minis" id="enc-minis"></div>
+    <div class="grid2 r mt">
+      <div class="chart-box"><p class="cap">Encaissé par mois</p><div class="ch"><canvas id="c-enc"></canvas></div></div>
+      <div class="chart-box"><p class="cap">Factures restant à encaisser</p><div class="aging" id="aging"></div><div class="tbl-wrap"><table class="tbl" id="t-enc"></table></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="s-aud">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="users"></i></span><h2>Audience des réseaux et des événements</h2><p class="hint">Inscrits, présents, vues des vidéos</p></div>
+    <p class="sub nomt"><i class="ic" data-ic="megaphone"></i>Réseaux de l'agence <span class="mute">abonnés à fin de mois, toute l'agence</span></p>
+    <div class="nets" id="nets"></div>
+    <p class="sub"><i class="ic" data-ic="ticket"></i>Public des événements <span class="mute" id="aud-scope"></span></p>
+    <div class="minis" id="aud-minis"></div>
+    <div class="grid2 mt">
+      <div class="chart-box"><p class="cap">Vues des vidéos par mois, tous réseaux</p><div class="ch"><canvas id="c-vues"></canvas></div></div>
+      <div class="chart-box"><p class="cap">Inscrits et présents par événement (hors salons)</p><div class="ch ch-tall"><canvas id="c-pres"></canvas></div></div>
+    </div>
+  </section>
+
+  <section class="block nova" id="s-nova">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="rocket"></i></span><h2>Prochain lancement : soirée NOVA X</h2><p class="hint">Ce que le tableau suivra pour cet événement</p></div>
+    <div id="nova"></div>
+  </section>
+</main>
+<footer class="foot"><div class="wrap">
+  <p>Tableau de pilotage de SN Silverplate Services. Chiffre d'affaires et marge hors taxes, encaissements toutes taxes comprises (TVA 18 %). Un événement compte dans le mois où il a lieu.</p>
+  <p class="small">Montants et audiences d'exemple, à remplacer par les exports de la comptabilité, du suivi des devis, de la billetterie et des réseaux. Version 20261117a.</p>
+</div></footer>
+<script src="assets/chart.umd.min.js"></script>
+<script src="assets/app.js?v=20261117a"></script>
+</body>
+</html>
