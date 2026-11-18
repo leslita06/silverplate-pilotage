@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>SN Silverplate Services · Pilotage et performance</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="assets/style.css?v=20261118a">
+<link rel="stylesheet" href="assets/style.css?v=20261118c">
 </head>
 <body>
 <div class="note"><div class="wrap"><i class="ic" data-ic="info"></i><span>Montants, audiences et statuts d'exemple, pour montrer le fonctionnement du tableau. Les noms des clients et des événements sont génériques.</span></div></div>
@@ -21,6 +21,7 @@
   </select></label>
   <label>Type d'événement<select id="f-type"><option value="all">Tous les types</option></select></label>
   <label>Client<select id="f-cli"><option value="all">Tous les clients</option></select></label>
+  <label class="lev">Événement<select id="f-ev"><option value="all">Tous les événements</option></select></label>
   <button class="raz" id="raz" type="button"><i class="ic" data-ic="rotate-ccw"></i>Réinitialiser</button>
 </div>
 <div class="wrap tabs" role="tablist">
@@ -30,6 +31,7 @@
 <main class="wrap">
   <section class="intro">
     <h1>L'agence en un coup d'œil</h1>
+    <p class="how"><i class="ic" data-ic="info"></i><span>Le lundi, ouvrez <a href="#s-lun">Lundi matin</a> : l'argent de la semaine, impôts et loyer compris. Pour un seul événement, choisissez-le dans le filtre <b>Événement</b> ou touchez-le dans la liste des événements en cours.</span></p>
     <p class="lede" id="phrase"></p>
   </section>
 
@@ -40,19 +42,22 @@
     <div class="bh"><span class="bx"><i class="ic" data-ic="sunrise"></i></span><h2>Lundi matin</h2><p class="hint" id="lun-hint"></p></div>
     <div class="minis" id="lun-minis"></div>
     <div class="grid2 r mt">
-      <div class="chart-box"><p class="cap">Cette semaine</p>
-        <p class="sub2"><i class="ic" data-ic="arrow-down-left"></i>Encaissements attendus</p><div class="lst" id="lun-in"></div>
-        <p class="sub2"><i class="ic" data-ic="arrow-up-right"></i>Paiements aux prestataires</p><div class="lst" id="lun-out"></div>
+      <div class="chart-box"><p class="cap">Cette semaine, en FCFA toutes taxes comprises</p>
+        <p class="sub2"><i class="ic" data-ic="arrow-down-left"></i>À encaisser</p><div class="lst" id="lun-in"></div>
+        <p class="sub2"><i class="ic" data-ic="arrow-up-right"></i>À payer : prestataires et charges fixes</p><div class="lst" id="lun-out"></div>
+        <p class="sub2"><i class="ic" data-ic="clock"></i>À relancer : factures en retard</p><div class="lst" id="lun-rel"></div>
       </div>
       <div class="chart-box"><p class="cap" id="lun-fx-cap">Charges fixes du mois</p><div class="fxcat" id="lun-cat"></div><div class="tbl-wrap"><table class="tbl" id="t-fx"></table></div></div>
     </div>
-    <div class="chart-box mt"><p class="cap">Solde prévisionnel sur 4 semaines : entrées, sorties et trésorerie en fin de semaine</p><div class="ch"><canvas id="c-lun"></canvas></div><div class="wk" id="lun-wk"></div></div>
+    <p class="sub"><i class="ic" data-ic="calendar-days"></i>Événements menés en parallèle <span class="mute">touchez-en un pour ne voir que lui dans tout le tableau</span></p>
+    <div class="encours" id="encours"></div>
+    <div class="chart-box mt"><p class="cap">Les 4 prochaines semaines : entrées, sorties et trésorerie en fin de semaine</p><div class="ch"><canvas id="c-lun"></canvas></div><div class="wk" id="lun-wk"></div></div>
   </section>
 
   <section class="block" id="s-ca">
     <div class="bh"><span class="bx"><i class="ic" data-ic="banknote"></i></span><h2>Chiffre d'affaires et marge</h2><p class="hint">Hors taxes, marge brute après coûts des prestataires</p></div>
     <div class="grid2">
-      <div class="chart-box"><p class="cap">Par mois, chiffre d'affaires et taux de marge</p><div class="ch"><canvas id="c-mois"></canvas></div></div>
+      <div class="chart-box evhide"><p class="cap">Par mois, chiffre d'affaires et taux de marge</p><div class="ch"><canvas id="c-mois"></canvas></div></div>
       <div class="chart-box"><p class="cap">Par type d'événement</p><div class="types" id="types"></div></div>
     </div>
     <p class="sub"><i class="ic" data-ic="building-2"></i>Par client</p>
@@ -74,33 +79,33 @@
     <div class="bh"><span class="bx"><i class="ic" data-ic="wallet"></i></span><h2>Encaissements</h2><p class="hint">Montants toutes taxes comprises</p></div>
     <div class="minis" id="enc-minis"></div>
     <div class="grid2 r mt">
-      <div class="chart-box"><p class="cap">Encaissé par mois</p><div class="ch"><canvas id="c-enc"></canvas></div></div>
+      <div class="chart-box evhide"><p class="cap">Encaissé par mois</p><div class="ch"><canvas id="c-enc"></canvas></div></div>
       <div class="chart-box"><p class="cap">Factures restant à encaisser</p><div class="aging" id="aging"></div><div class="tbl-wrap"><table class="tbl" id="t-enc"></table></div></div>
     </div>
   </section>
 
   <section class="block" id="s-aud">
     <div class="bh"><span class="bx"><i class="ic" data-ic="users"></i></span><h2>Audience des réseaux et des événements</h2><p class="hint">Inscrits, présents, vues des vidéos</p></div>
-    <p class="sub nomt"><i class="ic" data-ic="megaphone"></i>Réseaux de l'agence <span class="mute">abonnés à fin de mois, toute l'agence</span></p>
-    <div class="nets" id="nets"></div>
+    <p class="sub nomt evhide"><i class="ic" data-ic="megaphone"></i>Réseaux de l'agence <span class="mute">abonnés à fin de mois, toute l'agence</span></p>
+    <div class="nets evhide" id="nets"></div>
     <p class="sub"><i class="ic" data-ic="ticket"></i>Public des événements <span class="mute" id="aud-scope"></span></p>
     <div class="minis" id="aud-minis"></div>
     <div class="grid2 mt">
-      <div class="chart-box"><p class="cap">Vues des vidéos par mois, tous réseaux</p><div class="ch"><canvas id="c-vues"></canvas></div></div>
+      <div class="chart-box evhide"><p class="cap">Vues des vidéos par mois, tous réseaux</p><div class="ch"><canvas id="c-vues"></canvas></div></div>
       <div class="chart-box"><p class="cap">Inscrits et présents par événement (hors salons)</p><div class="ch ch-tall"><canvas id="c-pres"></canvas></div></div>
     </div>
   </section>
 
   <section class="block nova" id="s-nova">
-    <div class="bh"><span class="bx"><i class="ic" data-ic="rocket"></i></span><h2>Prochain lancement : soirée NOVA X</h2><p class="hint">Ce que le tableau suivra pour cet événement</p></div>
+    <div class="bh"><span class="bx"><i class="ic" data-ic="rocket"></i></span><h2>Prochain lancement : soirée NOVA X</h2><p class="hint">Prix, paiements du client et ce que le tableau suivra</p></div>
     <div id="nova"></div>
   </section>
 </main>
 <footer class="foot"><div class="wrap">
   <p>Tableau de pilotage de SN Silverplate Services. Chiffre d'affaires et marge hors taxes, encaissements toutes taxes comprises (TVA 18 %). Un événement compte dans le mois où il a lieu.</p>
-  <p class="small">Montants et audiences d'exemple, à remplacer par les exports de la comptabilité, du suivi des devis, de la billetterie et des réseaux. Version 20261118a.</p>
+  <p class="small">Montants et audiences d'exemple, à remplacer par les exports de la comptabilité, du suivi des devis, de la billetterie et des réseaux. Version 20261118b.</p>
 </div></footer>
 <script src="assets/chart.umd.min.js"></script>
-<script src="assets/app.js?v=20261118a"></script>
+<script src="assets/app.js?v=20261118c"></script>
 </body>
 </html>
