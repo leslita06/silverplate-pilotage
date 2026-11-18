@@ -213,3 +213,40 @@ h2{font:700 20px/1.25 var(--sans);letter-spacing:-.01em;color:var(--navy)}
  .sub{flex-wrap:wrap;gap:4px 8px}.sub .mute{flex-basis:100%;padding-left:24px}
  .nets .net:last-child{grid-column:1/-1}
 }
+
+/* lundi matin */
+.block.lundi{border-color:#CDD3E0;background:linear-gradient(180deg,#F7F8FF 0,#fff 180px)}
+.lundi .minis .mi{background:#fff;border:1px solid var(--line)}
+.lundi .mi .l .mute{color:var(--mute);font-size:12px}
+.lundi .mi .l .chip{margin-top:4px}
+.sub2{display:flex;align-items:center;gap:7px;font:700 13px/1.3 var(--sans);color:var(--ink);margin:16px 0 6px}
+.sub2 .ic{width:15px;height:15px;color:var(--mute)}
+.lst .li{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line2)}
+.lst .dd{font:600 12px/1.3 var(--sans);color:var(--mute);text-transform:capitalize}
+.lst .t{font:500 14px/1.35 var(--sans)}
+.lst .t small{display:block;font:400 12px/1.4 var(--sans);color:var(--mute);margin-top:2px}
+.lst b{font:700 14px/1.3 var(--sans);white-space:nowrap}
+.lst .li.tot{border-bottom:0}.lst .li.tot .t{font-weight:700}
+.fxcat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 14px}
+.fc{padding:12px;border-radius:12px;background:var(--soft);min-width:0}
+.fc .mic{margin-bottom:8px}
+.fc .n{font:500 12px/1.3 var(--sans);color:var(--ink2)}
+.fc .v{font:700 15px/1.2 var(--sans);color:var(--navy);margin-top:4px;white-space:nowrap}
+.tbl tr.paid td{color:var(--mute)}.tbl tr.paid td b{color:var(--mute);font-weight:500}
+.cap b{color:var(--navy)}
+.wk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.wk>div{padding:12px 14px;border-radius:12px;background:var(--soft);min-width:0}
+.wk .l{font:500 12px/1.3 var(--sans);color:var(--mute)}
+.wk .v{font:700 17px/1.2 var(--sans);color:var(--navy);margin-top:4px;white-space:nowrap}
+.wk .s{font:400 12px/1.4 var(--sans);margin-top:4px}
+.wkn{font:400 12.5px/1.5 var(--sans);color:var(--ink2);margin-top:12px}
+@media (max-width:640px){
+ .fxcat,.wk{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .lst .li{grid-template-columns:44px minmax(0,1fr) auto;gap:8px}
+ .lst .t{font-size:13.5px}
+}
+@media (max-width:640px){
+ #t-fx td.t{min-width:0}#t-fx td{padding-left:10px}
+ .lundi .tbl-wrap:has(#t-fx){margin-right:0;padding-right:0}
+ .lundi .tbl-wrap:has(#t-fx)::after{content:none}
+}

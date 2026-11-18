@@ -20,6 +20,7 @@ function mf(x){var a=Math.abs(x);if(a>=1e9)return nf(x/1e9,2)+'\u00a0Md';if(a>=1
 function fc(x){return mf(x)+'\u00a0FCFA'}
 function big(s){var m=String(s).match(/^(.*?)\u00a0(.*)$/);return m?m[1]+'<small>'+m[2]+'</small>':s}
 function compact(x){if(x>=1e6)return nf(x/1e6,1)+'\u00a0M';if(x>=1e4)return nf(x/1e3,1)+'\u00a0k';return nf(x)}
+function dot(s){return /\.$/.test(s)?s:s+'.'}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 function sum(a,f){var s=0;for(var i=0;i<a.length;i++)s+=f(a[i]);return s}
 function div(a,b){return b?a/b:0}
@@ -81,7 +82,7 @@ function render(){
   if(LATE.length){var old=LATE.slice().sort(function(a,b){return a.ech<b.ech?-1:1})[0];
     A.push(['bad','clock','<b>'+fc(retard)+' en retard de paiement</b> sur '+LATE.length+' facture'+(LATE.length>1?'s':'')+'.<span>La plus ancienne : '+esc(old.n)+' ('+esc(old.c)+'), échue depuis '+days(old.ech,D.arrete)+' jours.</span>'])}
   var soon=OP.filter(function(x){return x.sig&&days(D.arrete,x.sig)<=10}).sort(function(a,b){return a.sig<b.sig?-1:1});
-  if(soon.length)A.push(['warn','hourglass','<b>'+soon.length+' devis à relancer</b> : réponse attendue sous 10 jours.<span>'+soon.map(function(x){return esc(x.c)+', '+dfr(x.sig)}).join(' ; ')+'.</span>']);
+  if(soon.length)A.push(['warn','hourglass','<b>'+soon.length+' devis à relancer</b> : réponse attendue sous 10 jours.<span>'+dot(soon.map(function(x){return esc(x.c)+', '+dfr(x.sig)}).join(' ; '))+'</span>']);
   var low=E.filter(function(e){return div(e.m,e.ca)<.2}).sort(function(a,b){return div(a.m,a.ca)-div(b.m,b.ca)});
   if(low.length)A.push(['warn','triangle-alert','<b>'+low.length+' événement'+(low.length>1?'s':'')+' sous 20\u00a0% de marge</b>.<span>Le plus faible : '+esc(low[0].n)+' ('+esc(low[0].c)+'), '+pct(div(low[0].m,low[0].ca))+'.</span>']);
   if(A.length<3&&T.g+T.p)A.push(['ok','circle-check','<b>'+pct(T.r)+' des devis tranchés sont gagnés</b> '+R.lab+'.<span>'+T.g+' gagnés, '+T.p+' perdus.</span>']);
@@ -197,6 +198,54 @@ function renderNova(){
   ].map(function(x){return '<div class="nst"><div class="hd"><span class="bx">'+ic(x[0])+'</span>'+x[1]+'</div><p class="v">'+x[2]+'</p><p class="s">'+x[3]+'</p></div>'}).join('')+'</div>';
 }
 
+function renderLundi(){
+  var L=D.lundi,w0=L.semaine[0],w1=L.semaine[1],ar=D.arrete;
+  var tr=L.treso.banque+L.treso.caisse;
+  var IN=L.entrees.filter(function(x){return x[4]===0}),OUT=L.prestataires.filter(function(x){return x[3]===0});
+  var FX=L.fixes,FXW=FX.filter(function(x){return !x[4]&&x[5]===0});
+  var tin=sum(IN,function(x){return x[3]}),tout=sum(OUT,function(x){return x[2]}),tfw=sum(FXW,function(x){return x[2]});
+  // semaines
+  var W=[0,1,2,3].map(function(i){var s=new Date(dt(w0).getTime()+i*7*864e5);return {s:s.toISOString().slice(0,10),e:new Date(s.getTime()+6*864e5).toISOString().slice(0,10),inn:0,out:0}});
+  L.entrees.forEach(function(x){W[x[4]].inn+=x[3]});
+  L.prestataires.forEach(function(x){W[x[3]].out+=x[2]});
+  FX.forEach(function(x){if(!x[4]&&x[5]!==null)W[x[5]].out+=x[2]});
+  L.fixes_suivants.forEach(function(x){W[x[4]].out+=x[2]});
+  var bal=tr;W.forEach(function(w){bal+=w.inn-w.out;w.bal=bal});
+  var d0=dt(w0),d1=dt(w1);
+  $('lun-hint').textContent='Semaine du lundi '+dfr(w0)+' au dimanche '+dfr(w1)+' · toute l’agence';
+  $('lun-minis').innerHTML=[
+    ['landmark',big(fc(tr)),'Trésorerie disponible ce lundi<br><span class="mute">banque '+fc(L.treso.banque)+', caisse '+fc(L.treso.caisse)+'</span>'],
+    ['arrow-down-left',big(fc(tin)),'Encaissements attendus cette semaine<br><span class="mute">'+IN.length+' règlement'+(IN.length>1?'s':'')+' client</span>'],
+    ['arrow-up-right',big(fc(tout+tfw)),'Décaissements cette semaine<br><span class="mute">prestataires '+fc(tout)+', charges fixes '+fc(tfw)+'</span>'],
+    ['piggy-bank',big(fc(W[3].bal)),'Solde prévisionnel au '+dfr(W[3].e)+'<br>'+dl(W[3].bal,tr)+'<span class="mute">dans 4 semaines</span>']
+  ].map(mini).join('');
+  function row(dd,l,s,m,cls){return '<div class="li"><span class="dd">'+dd+'</span><p class="t">'+esc(l)+(s?'<small>'+esc(s)+'</small>':'')+'</p><b class="'+cls+'">'+fc(m)+'</b></div>'}
+  function jd(iso){var d=dt(iso);return JOURS[d.getDay()].slice(0,3)+'. '+d.getDate()}
+  $('lun-in').innerHTML=IN.map(function(x){return row(jd(x[0]),x[1],x[2]+' · '+x[5],x[3],'up')}).join('')+'<div class="li tot"><span class="dd"></span><p class="t">Total attendu</p><b class="up">'+fc(tin)+'</b></div>';
+  $('lun-out').innerHTML=OUT.map(function(x){return row(jd(x[0]),x[1],'',x[2],'')}).join('')+'<div class="li tot"><span class="dd"></span><p class="t">Total prestataires</p><b>'+fc(tout)+'</b></div>';
+  // charges fixes
+  var md=dt(w0),mois=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'][md.getMonth()];
+  var tot=sum(FX,function(x){return x[2]}),paid=sum(FX.filter(function(x){return x[4]}),function(x){return x[2]});
+  $('lun-fx-cap').innerHTML='Charges fixes de '+mois+' : <b>'+fc(tot)+'</b>, dont '+fc(tot-paid)+' restant à payer';
+  var CI={'Loyer':'house','Salaires':'users-round','Impôts et taxes':'landmark','Abonnements':'wifi'};
+  $('lun-cat').innerHTML=['Loyer','Salaires','Impôts et taxes','Abonnements'].map(function(c){var s=sum(FX.filter(function(x){return x[0]===c}),function(x){return x[2]});
+    return '<div class="fc"><span class="mic">'+ic(CI[c])+'</span><p class="n">'+c+'</p><p class="v">'+fc(s)+'</p></div>'}).join('');
+  var FS=FX.slice().sort(function(a,b){return a[4]===b[4]?(a[3]<b[3]?-1:1):(a[4]?1:-1)});
+  $('t-fx').innerHTML='<thead><tr><th>Charge</th><th>Montant</th><th>Échéance</th></tr></thead><tbody>'+FS.map(function(x){var j=days(ar,x[3]);
+    var st=x[4]?'<span class="st ok"><i></i>payé</span>':(j<0?'<span class="st bad"><i></i>en retard</span>':j<=3?'<span class="st bad"><i></i>dans '+j+' j</span>':'<span class="st warn"><i></i>dans '+j+' j</span>');
+    return '<tr'+(x[4]?' class="paid"':'')+'><td class="t">'+esc(x[1])+'<small>'+x[0]+'</small></td><td><b>'+fc(x[2])+'</b></td><td>'+dfr(x[3])+'<br>'+st+'</td></tr>'}).join('')+'</tbody>';
+  // 4 semaines
+  var lab=W.map(function(w){return dfr(w.s)+' – '+dfr(w.e)});
+  chart('c-lun',{type:'bar',data:{labels:lab,datasets:[
+    {type:'line',label:'Trésorerie en fin de semaine',data:W.map(function(w){return w.bal}),yAxisID:'y2',borderColor:NAVY,backgroundColor:NAVY,pointRadius:4,borderWidth:2.5,tension:.25},
+    {label:'Entrées',data:W.map(function(w){return w.inn}),backgroundColor:'#0D9488',borderRadius:5,maxBarThickness:34},
+    {label:'Sorties',data:W.map(function(w){return w.out}),backgroundColor:'#F59E0B',borderRadius:5,maxBarThickness:34}]},
+    options:opt({y:{beginAtZero:true,ticks:{callback:function(v){return mf(v)}},grid:{color:'#EFF2F7'},border:{display:false}},y2:{position:'right',beginAtZero:true,ticks:{callback:function(v){return mf(v)}},grid:{display:false},border:{display:false}}},function(c){return ' '+c.dataset.label+' : '+fc(c.raw)},true)});
+  $('lun-wk').innerHTML=W.map(function(w,i){return '<div><p class="l">'+(i?'Semaine '+(i+1):'Cette semaine')+'</p><p class="v">'+fc(w.bal)+'</p><p class="s">'+(w.inn?'<span class="up">+'+mf(w.inn)+'</span>':'<span class="mute">aucune entrée</span>')+' · <span class="down">\u2212'+mf(w.out)+'</span></p></div>'}).join('');
+  var lt=D.factures.filter(function(x){return x.mt>x.enc&&x.ech<ar}),nin=lt.filter(function(x){return !L.entrees.some(function(e){return e[1].indexOf(x.n)===0})});
+  var nn=$('lun-wkn');if(nn)nn.remove();
+  if(nin.length)$('lun-wk').insertAdjacentHTML('afterend','<p class="wkn" id="lun-wkn">Par prudence, '+fc(sum(nin,function(x){return x.mt-x.enc}))+' de factures en retard ne sont pas comptés dans les entrées tant qu’aucune date de règlement n’est annoncée.</p>');
+}
 function opt(scales,lab,legend){
   return {responsive:true,maintainAspectRatio:false,animation:{duration:350},interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:legend!==false,position:'bottom',labels:{boxWidth:10,boxHeight:10,usePointStyle:true,pointStyle:'rectRounded',font:{family:'Roboto',size:12},color:'#4A5068'}},
@@ -217,8 +266,8 @@ function init(){
   $('raz').onclick=function(){S={per:'12',type:'all',cli:'all'};$('f-per').value='12';ft.value='all';fcl.value='all';showAll=false;render()};
   var tabs=document.querySelectorAll('.tabs a');
   if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){Array.prototype.forEach.call(tabs,function(t){var on=t.getAttribute('href')==='#'+x.target.id;t.classList.toggle('on',on);if(on){var w=t.parentNode;w.scrollTo({left:t.offsetLeft-16,behavior:'smooth'})}})}})},{rootMargin:'-40% 0px -55% 0px'});
-    ['s-ca','s-dev','s-enc','s-aud','s-nova'].forEach(function(i){io.observe($(i))})}
-  hydrate();render();
+    ['s-lun','s-ca','s-dev','s-enc','s-aud','s-nova'].forEach(function(i){io.observe($(i))})}
+  hydrate();render();renderLundi();
 }
-fetch('data/donnees.json?v=20261117a').then(function(r){return r.json()}).then(function(j){D=j;init()});
+fetch('data/donnees.json?v=20261118a').then(function(r){return r.json()}).then(function(j){D=j;init()});
 })();

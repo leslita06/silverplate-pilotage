@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow">
 <title>SN Silverplate Services · Pilotage et performance</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="assets/style.css?v=20261117a">
+<link rel="stylesheet" href="assets/style.css?v=20261118a">
 </head>
 <body>
-<div class="note"><div class="wrap"><i class="ic" data-ic="info"></i><span>Montants, audiences et statuts d'exemple, pour montrer le fonctionnement du tableau. Les noms d'événements publiés par l'agence sont réels ; leurs chiffres ne le sont pas.</span></div></div>
+<div class="note"><div class="wrap"><i class="ic" data-ic="info"></i><span>Montants, audiences et statuts d'exemple, pour montrer le fonctionnement du tableau. Les noms des clients et des événements sont génériques.</span></div></div>
 <header class="masthead"><div class="wrap mh">
   <div class="brand"><img class="logo" src="assets/logo.png" alt="SN Silverplate Services"><div><p class="bn">SN Silverplate Services</p><p class="bs">Meilleure agence événementielle · ASCOM 2026</p></div></div>
   <div class="mh-right"><p class="eyebrow">Pilotage et performance</p><p class="arrete"><i class="ic" data-ic="calendar"></i><span id="arrete"></span></p></div>
@@ -24,7 +24,7 @@
   <button class="raz" id="raz" type="button"><i class="ic" data-ic="rotate-ccw"></i>Réinitialiser</button>
 </div>
 <div class="wrap tabs" role="tablist">
-  <a href="#s-ca" class="on"><i class="ic" data-ic="banknote"></i>Activité</a><a href="#s-dev"><i class="ic" data-ic="file-text"></i>Devis</a><a href="#s-enc"><i class="ic" data-ic="wallet"></i>Encaissements</a><a href="#s-aud"><i class="ic" data-ic="users"></i>Audience</a><a href="#s-nova"><i class="ic" data-ic="rocket"></i>NOVA X</a>
+  <a href="#s-lun" class="on"><i class="ic" data-ic="sunrise"></i>Lundi matin</a><a href="#s-ca"><i class="ic" data-ic="banknote"></i>Activité</a><a href="#s-dev"><i class="ic" data-ic="file-text"></i>Devis</a><a href="#s-enc"><i class="ic" data-ic="wallet"></i>Encaissements</a><a href="#s-aud"><i class="ic" data-ic="users"></i>Audience</a><a href="#s-nova"><i class="ic" data-ic="rocket"></i>NOVA X</a>
 </div></nav>
 
 <main class="wrap">
@@ -35,6 +35,19 @@
 
   <section class="kpis" id="kpis"></section>
   <section class="alerts" id="alerts"></section>
+
+  <section class="block lundi" id="s-lun">
+    <div class="bh"><span class="bx"><i class="ic" data-ic="sunrise"></i></span><h2>Lundi matin</h2><p class="hint" id="lun-hint"></p></div>
+    <div class="minis" id="lun-minis"></div>
+    <div class="grid2 r mt">
+      <div class="chart-box"><p class="cap">Cette semaine</p>
+        <p class="sub2"><i class="ic" data-ic="arrow-down-left"></i>Encaissements attendus</p><div class="lst" id="lun-in"></div>
+        <p class="sub2"><i class="ic" data-ic="arrow-up-right"></i>Paiements aux prestataires</p><div class="lst" id="lun-out"></div>
+      </div>
+      <div class="chart-box"><p class="cap" id="lun-fx-cap">Charges fixes du mois</p><div class="fxcat" id="lun-cat"></div><div class="tbl-wrap"><table class="tbl" id="t-fx"></table></div></div>
+    </div>
+    <div class="chart-box mt"><p class="cap">Solde prévisionnel sur 4 semaines : entrées, sorties et trésorerie en fin de semaine</p><div class="ch"><canvas id="c-lun"></canvas></div><div class="wk" id="lun-wk"></div></div>
+  </section>
 
   <section class="block" id="s-ca">
     <div class="bh"><span class="bx"><i class="ic" data-ic="banknote"></i></span><h2>Chiffre d'affaires et marge</h2><p class="hint">Hors taxes, marge brute après coûts des prestataires</p></div>
@@ -85,9 +98,9 @@
 </main>
 <footer class="foot"><div class="wrap">
   <p>Tableau de pilotage de SN Silverplate Services. Chiffre d'affaires et marge hors taxes, encaissements toutes taxes comprises (TVA 18 %). Un événement compte dans le mois où il a lieu.</p>
-  <p class="small">Montants et audiences d'exemple, à remplacer par les exports de la comptabilité, du suivi des devis, de la billetterie et des réseaux. Version 20261117a.</p>
+  <p class="small">Montants et audiences d'exemple, à remplacer par les exports de la comptabilité, du suivi des devis, de la billetterie et des réseaux. Version 20261118a.</p>
 </div></footer>
 <script src="assets/chart.umd.min.js"></script>
-<script src="assets/app.js?v=20261117a"></script>
+<script src="assets/app.js?v=20261118a"></script>
 </body>
 </html>
